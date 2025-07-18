@@ -58,6 +58,15 @@ For computational feasibility, subsamples of 100 to 1500 lenses were analyzed to
 This confirms **significant clustering differences** in BH-type object spatial distribution near lenses compared to random fields.
 
 ---
+---
+
+## Ripley's K Function Spatial Clustering
+
+![Ripley's K Function Plot](Ripley_k_plot.png)
+
+*Figure: Ripley's K function curves showing black hole (BH) object clustering near strong lenses (blue), compared to random sky BH objects (orange), with the theoretical Poisson expectation (dashed black line). This highlights the significant spatial clustering of BH objects around lenses.*
+
+---
 
 ## Interpretation
 
