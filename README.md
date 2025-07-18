@@ -58,7 +58,6 @@ For computational feasibility, subsamples of 100 to 1500 lenses were analyzed to
 This confirms **significant clustering differences** in BH-type object spatial distribution near lenses compared to random fields.
 
 ---
----
 
 ## Ripley's K Function Spatial Clustering
 
