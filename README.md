@@ -1,5 +1,6 @@
-# bh_lens_simbad_analysis.py
+# bh_lens_simbad_analysis.py  
 SIMBAD-based statistical study of black hole object associations with strong gravitational lenses
+
 # Black Hole Association in Strong Lensing Candidates
 
 ## Overview
@@ -20,31 +21,47 @@ This project investigates the association between strong gravitational lensing c
 
 ---
 
-## Results after 50 Batches (2500 Lenses)
+## Key Results
 
-### Radius: 10 arcmin
-- BH in Lenses: 1962 / 2500 (78.5%)
-- BH in Random : 883 / 2500 (35.3%)
-- Lens total BH objects: 21,037 (mean per field: 8.41)
-- Random total BH objects: 4,116 (mean per field: 1.65)
+### Large-Scale SIMBAD Query (~13,941 Lenses)
 
-### Radius: 15 arcmin
-- BH in Lenses: 2062 / 2500 (82.5%)
-- BH in Random : 1001 / 2500 (40.0%)
-- Lens total BH objects: 47,382 (mean per field: 18.95)
-- Random total BH objects: 9,252 (mean per field: 3.70)
+Queried SIMBAD around **~13,941** confident/probable lenses with valid redshift, compared to matched random sky fields with the same number of points at radii 10′, 15′, and 20′.
 
-### Radius: 20 arcmin
-- BH in Lenses: 2111 / 2500 (84.4%)
-- BH in Random : 1097 / 2500 (43.9%)
-- Lens total BH objects: 83,653 (mean per field: 33.46)
-- Random total BH objects: 16,459 (mean per field: 6.58)
+| Radius     | BH in Lenses (%) | BH in Random (%) | Mean BH Count (Lens) | Mean BH Count (Random) |
+|------------|------------------|------------------|---------------------|-----------------------|
+| 10 arcmin  | 63.5%            | 35.4%            | 7.90                | 1.74                  |
+| 15 arcmin  | 68.2%            | 40.0%            | 17.03               | 3.90                  |
+| 20 arcmin  | 71.6%            | 44.0%            | 28.97               | 6.90                  |
+
+Statistical tests (Chi-squared, Binomial, Poisson, KS) show p-values < 1e-100 for all radii, **strongly confirming** a significant excess of BH-type objects near lenses compared to random sky fields.
+
+---
+
+### Medium-Scale Spatial Clustering (~100 to 1500 Lenses)
+
+For computational feasibility, subsamples of 100 to 1500 lenses were analyzed to explore spatial clustering using angular separations and Ripley’s K function:
+
+- Retrieved full RA/DEC coordinates for BH-type objects within 20′ radius around lenses and matched random fields.
+- Computed all pairwise angular separations within each group.
+- Performed Ripley’s K function analysis to quantify clustering.
+- Applied Kolmogorov-Smirnov tests to compare lens vs. random BH object spatial distributions.
+
+**Example Results (100-lens sample):**
+
+| Metric                           | Lenses         | Random Fields   |
+|----------------------------------|----------------|-----------------|
+| Fields with ≥1 BH-type object    | 77%            | 21%             |
+| Mean BH-type object count        | 28.76          | 2.48            |
+| KS test statistic (D)            | 0.22           | —               |
+| KS test p-value                  | ≈ 0            | —               |
+
+This confirms **significant clustering differences** in BH-type object spatial distribution near lenses compared to random fields.
 
 ---
 
 ## Interpretation
 
-These results demonstrate a significant excess of BH-type objects clustered around strong lens candidates compared to random sky fields. This strong statistical association suggests lenses are located in BH-rich environments, a finding that warrants further astrophysical investigation.
+These results demonstrate a significant excess and spatial clustering of BH-type objects around strong lens candidates, suggesting lenses are located in BH-rich environments. This statistical association challenges traditional dark matter halo-centric lens models and warrants further astrophysical investigation.
 
 ---
 
@@ -53,15 +70,17 @@ These results demonstrate a significant excess of BH-type objects clustered arou
 1. Clone this repository.
 2. Install dependencies:
    ```bash
-   pip install lenscat astroquery astropy scipy pandas numpy matplotlib
-3. Run the main analysis script to reproduce results.
+   pip install lenscat astroquery astropy scipy pandas numpy matplotlib tqdm
+3.Run the main analysis script (bh_lens_simbad_analysis.py) to reproduce results.
 
 ## License
-
 MIT License
 
+## Contact
+For questions or collaboration inquiries, please open an issue or contact [mjay10016@gmail.com].
 
----
 
-If you want, I can help format the **analysis script** that you run for step 3 or draft a quick `main.py` script to upload along with this README. Just say the word!
+
+
+
 
