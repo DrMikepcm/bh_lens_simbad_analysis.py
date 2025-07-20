@@ -63,7 +63,7 @@ This confirms **significant clustering differences** in BH-type object spatial d
 
 ### 📊 Histogram: BH Counts Near Lenses vs. Random Fields
 
-![BH Histogram](bh_histogram.png)
+![BH Histogram](images/Histogram.lenses.png)
 
 **Description:**  
 Histogram comparing the number of BH-type objects per field around strong gravitational lenses (blue) and matched random sky positions (orange). Each field covers a 20′ radius. The x-axis shows BH-type object counts; the y-axis is normalized probability.  
@@ -73,7 +73,7 @@ Histogram comparing the number of BH-type objects per field around strong gravit
 
 ### 🌌 Spatial Scatter Plot: BH Object Locations
 
-![Spatial Plot](bh_spatial_plot.png)
+![Spatial Plot](images/spatial.png)
 
 **Description:**  
 Scatter plot of BH-type object positions around 1000 strong lenses (left) and 1000 matched random fields (right). Each dot represents a SIMBAD-classified BH-type object within a 20′ radius of the center.  
@@ -83,11 +83,10 @@ Scatter plot of BH-type object positions around 1000 strong lenses (left) and 10
 
 ### 📈 Cumulative Distribution Function (CDF)
 
-![CDF Plot](bh_cdf_plot.png)
+![CDF Plot](images/cdf.png)
 
 **Description:**  
-Cumulative distribution of BH-type object counts in lens vs. random fields. The plot shows the fraction of fields with a BH count less than or equal to a given value.  
-**Inset:** A zoomed-in view of the high-count regime (60–125), where the lens curve significantly outpaces the random distribution.  
+Cumulative distribution of BH-type object counts in lens vs. random fields. The plot shows the fraction of fields with a BH count less than or equal to a given value.    
 **Key Insight:** Lenses have a systematically higher probability of hosting multiple BH-type objects than random fields.
 
 ---
@@ -96,7 +95,13 @@ Cumulative distribution of BH-type object counts in lens vs. random fields. The 
 
 ![Ripley's K Function Plot](images/Ripley_k_plot.png)
 
-*Figure: Ripley's K function curves showing black hole (BH) object clustering near strong lenses (blue), compared to random sky BH objects (orange), with the theoretical Poisson expectation (dashed black line). This highlights the significant spatial clustering of BH objects around lenses.*
+
+
+**Description:**  
+Cumulative distribution of BH-type object counts in lens vs. random fields. The plot shows the fraction of fields with a BH count less than or equal to a given value.
+
+**Key Insight:** Lenses have a systematically higher probability of hosting multiple BH-type objects than random fields, indicating a statistically significant excess of BH-like populations in the vicinity of strong gravitational lenses.
+
 
 ---
 
