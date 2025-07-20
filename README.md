@@ -105,6 +105,22 @@ These results reveal a pronounced excess and spatial clustering of BH-type objec
 
 ---
 
+## Limitations
+
+- **SIMBAD Classification Biases:** Dependence on SIMBAD classifications means results may be affected by incomplete or inconsistent object labeling.
+
+- **Lens Catalog Completeness and Confidence:** The lenscat catalog includes candidates with varying grading and potential selection biases impacting statistical robustness.
+
+- **2D Projected Analysis:** Use of angular separations and fixed radii lacks full three-dimensional spatial information (redshift uncertainties and line-of-sight distances), limiting environmental precision.
+
+- **Random Control Selection:** Random fields, although matched in galactic latitude and excluding known lenses, may still be subject to large-scale structure biases.
+
+- **Computational Constraints:** Spatial clustering analysis was limited to a 1000-lens subsample; full-sample clustering analysis remains future work.
+
+- **Observational and Model-Agnostic:** The study is statistical and observational without proposing a physical mechanism, thus astrophysical interpretations remain tentative. However, a physically motivated modeling system that may explain the observed BH clustering exists and will be explored in future work.
+
+---
+
 ## How to Run
 
 1. Clone this repository.
