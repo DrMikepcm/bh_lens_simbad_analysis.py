@@ -121,6 +121,12 @@ These results reveal a pronounced excess and spatial clustering of BH-type objec
 
 ---
 
+## AI Assistance
+
+Parts of the code development and documentation for this project were supported by ChatGPT, an AI language model created by OpenAI. All scientific interpretations, analyses, and decisions remain the sole responsibility of the author.
+
+---
+
 ## How to Run
 
 1. Clone this repository.
