@@ -65,8 +65,7 @@ This confirms **significant clustering differences** in BH-type object spatial d
 
 ![BH Histogram](images/Histogram.lenses.png)
 
-**Description:**  
-Histogram comparing the number of BH-type objects per field around strong gravitational lenses (blue) and matched random sky positions (orange). Each field covers a 20′ radius. The x-axis shows BH-type object counts; the y-axis is normalized probability.  
+**Description:** Histogram comparing the number of BH-type objects per field around strong gravitational lenses (blue) and matched random sky positions (orange). Each field covers a 20′ radius. The x-axis shows BH-type object counts; the y-axis is normalized probability.  
 **Key Insight:** BH-type objects occur far more frequently near lenses than in randomly selected sky regions.
 
 ---
@@ -75,8 +74,7 @@ Histogram comparing the number of BH-type objects per field around strong gravit
 
 ![Spatial Plot](images/spatial.png)
 
-**Description:**  
-Scatter plot of BH-type object positions around 1000 strong lenses (left) and 1000 matched random fields (right). Each dot represents a SIMBAD-classified BH-type object within a 20′ radius of the center.  
+**Description:** Scatter plot of BH-type object positions around 1000 strong lenses (left) and 1000 matched random fields (right). Each dot represents a SIMBAD-classified BH-type object within a 20′ radius of the center.  
 **Key Insight:** A higher concentration of BH-type objects is evident in lens fields compared to random fields, supporting spatial correlation.
 
 ---
@@ -85,8 +83,7 @@ Scatter plot of BH-type object positions around 1000 strong lenses (left) and 10
 
 ![CDF Plot](images/cdf.png)
 
-**Description:**  
-Cumulative distribution of BH-type object counts in lens vs. random fields. The plot shows the fraction of fields with a BH count less than or equal to a given value.    
+**Description:** Cumulative distribution of BH-type object counts in lens vs. random fields. The plot shows the fraction of fields with a BH count less than or equal to a given value.    
 **Key Insight:** Lenses have a systematically higher probability of hosting multiple BH-type objects than random fields.
 
 ---
@@ -97,8 +94,7 @@ Cumulative distribution of BH-type object counts in lens vs. random fields. The 
 
 
 
-**Description:**  
-Cumulative distribution of BH-type object counts in lens vs. random fields. The plot shows the fraction of fields with a BH count less than or equal to a given value.
+**Description:** Cumulative distribution of BH-type object counts in lens vs. random fields. The plot shows the fraction of fields with a BH count less than or equal to a given value.
 
 **Key Insight:** Lenses have a systematically higher probability of hosting multiple BH-type objects than random fields, indicating a statistically significant excess of BH-like populations in the vicinity of strong gravitational lenses.
 
