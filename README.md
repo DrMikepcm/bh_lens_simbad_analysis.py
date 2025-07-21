@@ -139,7 +139,7 @@ Parts of the code development and documentation for this project were supported 
 
 ---
 
-### `spatial_clustering_proof_of_concept.py`
+### `[spatial_clustering_proof_of_concept.py].(bh_clustering_proof_of_concept.py)`
 
 - **Description:** Proof-of-concept spatial clustering analysis of black hole-type objects near strong gravitational lenses versus random sky fields.  
 - **Location:** (bh_clustering_proof_of_concept.py)  
