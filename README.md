@@ -142,7 +142,7 @@ Parts of the code development and documentation for this project were supported 
 ### `spatial_clustering_proof_of_concept.py`
 
 - **Description:** Proof-of-concept spatial clustering analysis of black hole-type objects near strong gravitational lenses versus random sky fields.  
-- **Location:** [`spatial_clustering_proof_of_concept.py`](./spatial_clustering_proof_of_concept.py)  
+- **Location:** (bh_clustering_proof_of_concept.py)  
 - **Functionality:** Loads a subset (~100) of lenses from the `lenscat` catalog, queries SIMBAD for BH-like objects within a fixed radius, computes angular separations, and compares clustering statistics against matched random points avoiding lens overlap.  
 - **Dependencies:** Requires `lenscat`, `astroquery`, `astropy`, `numpy`, `pandas`, `matplotlib`, `scipy`.  
 - **Usage:** Run this script to visualize and statistically test BH spatial clustering on a smaller lens sample for rapid prototyping.
