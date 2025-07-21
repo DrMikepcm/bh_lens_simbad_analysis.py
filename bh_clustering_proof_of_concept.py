@@ -46,8 +46,8 @@ def query_bh_objects(coord, radius_arcmin=20):
         result = custom_simbad.query_region(coord, radius=radius)
         if result is None:
             return []
-        # Filter BH-type objects
-        bh_objects = [row for row in result if any(bh in row['OTYPE'] for bh in bh_types)]
+        # Filter BH-type objects with case-insensitive matching
+        bh_objects = [row for row in result if any(bh == row['OTYPE'].strip().upper() for bh in bh_types)]
         return bh_objects
     except Exception as e:
         print(f"SIMBAD query failed at {coord.to_string('hmsdms')}: {e}")
@@ -83,7 +83,7 @@ print("Querying SIMBAD for BH-type objects around lenses...")
 for coord in lens_coords:
     objs = query_bh_objects(coord, radius_arcmin=20)
     lens_bh_objects.append(objs)
-    time.sleep(1)  # throttle
+    time.sleep(1)  # throttle to avoid SIMBAD overload
 
 print("Querying SIMBAD for BH-type objects around random points...")
 for coord in random_coords:
