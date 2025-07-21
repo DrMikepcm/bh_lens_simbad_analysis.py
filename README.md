@@ -137,23 +137,33 @@ Parts of the code development and documentation for this project were supported 
 - **Dependencies:** `lenscat`, `astroquery`, `astropy`, `numpy`, `pandas`, `scipy`, `tqdm`.
 - **Usage:** Run this script to reproduce the macro-scale statistical results on BH clustering near lenses.
 
+---
 
 ### `bh_clustering_proof_of_concept.py`
 
-- **Description:** Proof-of-concept spatial clustering analysis of BH-type objects near a small sample (~100) of strong gravitational lenses.
+- **Description:** Proof-of-concept spatial clustering analysis of BH-type objects near a small sample (n=100) of strong gravitational lenses.
 - **Location:** [`bh_clustering_proof_of_concept.py`](./bh_clustering_proof_of_concept.py)
 - **Functionality:** Loads a small lens subset from `lenscat`, queries SIMBAD for BH-like objects near each lens and matched random points, computes pairwise angular separations, and compares clustering using histograms and cumulative distribution functions (CDFs).
 - **Dependencies:** `lenscat`, `astroquery`, `astropy`, `numpy`, `pandas`, `matplotlib`, `scipy`.
 - **Usage:** Run this script for quick exploratory analysis and spatial clustering visualization using Ripley-style statistics.
 
-## How to Run
+---
 
-1. Clone this repository.
-2. Install dependencies:
-   ```bash
-   pip install lenscat astroquery astropy scipy pandas numpy matplotlib tqdm
-3.Run the main analysis script (bh_lens_simbad_analysis.py) to reproduce results.
+### `ripley_k_bh_lens_analysis_py.py`
 
+- **Description:** Performs Ripley’s K function–style spatial clustering analysis of black hole (BH)-type objects around a medium sample (n=1000) strong gravitational lenses versus matched random sky fields, quantifying angular clustering differences.  
+- **Location:** [`ripley_k_bh_lens_analysis_py.py`](./ripley_k_bh_lens_analysis_py.py)  
+- **Functionality:** Loads BH object coordinate data for lenses and random fields, computes pairwise angular separations, plots histograms of separations, and applies a Kolmogorov-Smirnov (KS) test to assess clustering significance.  
+- **Dependencies:** `numpy`, `pandas`, `astropy`, `matplotlib`, `scipy`.  
+- **Usage:** Run this script after obtaining SIMBAD query data to analyze and visualize spatial clustering signatures using Ripley’s K–style statistics.
+
+---
+
+**Required packages for all scripts:**
+
+```bash
+pip install lenscat astroquery astropy pandas numpy scipy matplotlib tqdm
+```
 ---
 
 ## License
