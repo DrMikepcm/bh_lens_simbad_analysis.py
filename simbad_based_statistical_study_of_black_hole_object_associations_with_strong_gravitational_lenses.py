@@ -54,17 +54,27 @@ def generate_random_points(n_points, all_coords, min_sep_arcmin=20):
         print(f"⚠️ Only generated {len(points)} random points after {attempts} attempts")
     return points
 
-def query_bh_counts(coord, radius_arcmin=10):
+def query_bh_counts(coord, radius_arcmin=10, max_retries=3):
     radius = radius_arcmin * u.arcmin
-    try:
-        result = custom_simbad.query_region(coord, radius=radius)
-        if result is None:
-            return 0
-        count = sum(any(bh in otype for bh in bh_types) for otype in result['OTYPE'])
-        return count
-    except Exception as e:
-        print(f"SIMBAD query failed at {coord.to_string('hmsdms')}: {e}")
-        return None
+    retries = 0
+
+    while retries < max_retries:
+        try:
+            result = custom_simbad.query_region(coord, radius=radius)
+            if result is None:
+                return 0
+            # Case-insensitive matching of OTYPE
+            count = sum(
+                any(bh in otype.upper() for bh in bh_types)
+                for otype in result['OTYPE']
+            )
+            return count
+        except Exception as e:
+            retries += 1
+            print(f"SIMBAD query failed at {coord.to_string('hmsdms')} (attempt {retries}): {e}")
+            time.sleep(5)
+    print(f"SIMBAD query failed at {coord.to_string('hmsdms')} after {max_retries} retries, skipping.")
+    return None
 
 # Setup SIMBAD query object
 custom_simbad = Simbad()
@@ -113,18 +123,16 @@ for batch_i, batch_df in enumerate(batches, 1):
         lens_counts = []
         for coord in lens_coords:
             c = query_bh_counts(coord, radius)
-            while c is None:
-                time.sleep(5)
-                c = query_bh_counts(coord, radius)
+            if c is None:
+                c = 0  # Treat failed queries as zero counts
             lens_counts.append(c)
 
         # Query BH counts for random points
         random_counts = []
         for coord in random_points:
             c = query_bh_counts(coord, radius)
-            while c is None:
-                time.sleep(5)
-                c = query_bh_counts(coord, radius)
+            if c is None:
+                c = 0  # Treat failed queries as zero counts
             random_counts.append(c)
 
         lens_positive = sum(c > 0 for c in lens_counts)
