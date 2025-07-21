@@ -1,5 +1,3 @@
-# ripley_clustering_analysis.py
-
 """
 This script performs spatial clustering analysis using Ripley’s K function to evaluate whether
 black hole-like objects (AGN/QSO/BLAZAR/XRB/etc.) are more spatially clustered around strong
@@ -21,19 +19,20 @@ from astropy import units as u
 from lenscat import load_lenscat
 from astroquery.simbad import Simbad
 from tqdm import tqdm
-from scipy.spatial import distance_matrix
 from scipy.stats import ks_2samp
 import random
+import time
 
 # Custom SIMBAD query setup
 custom_simbad = Simbad()
 custom_simbad.TIMEOUT = 120
 custom_simbad.add_votable_fields("otype")
 
-# BH-type objects
-BH_TYPES = ["BH", "QSO", "BLLac", "AGN", "XRB", "BHXRB", "Blazar"]
+# BH-type objects (all uppercase for case-insensitive matching)
+BH_TYPES = ["BH", "QSO", "BLLAC", "AGN", "XRB", "BHXRB", "BLAZAR"]
 RADIUS = 20 * u.arcmin
 N_LENSES = 1000
+MAX_RETRIES = 3
 
 # Load and filter lenses
 print("Loading lens catalog...")
@@ -42,15 +41,25 @@ lenses = lenses[lenses['grade'].isin(['confident', 'probable'])]
 lenses = lenses.dropna(subset=['z'])
 lenses = lenses.sample(n=N_LENSES, random_state=42).reset_index(drop=True)
 
-# SIMBAD Query Function
-def query_bh_objects(ra_deg, dec_deg, radius):
-    result = custom_simbad.query_region(SkyCoord(ra=ra_deg*u.deg, dec=dec_deg*u.deg), radius=radius)
-    if result is None:
-        return []
-    return [SkyCoord(ra=r['RA'], dec=r['DEC'], unit=(u.hourangle, u.deg))
-            for r in result if str(r['OTYPE']) in BH_TYPES]
+def query_bh_objects(ra_deg, dec_deg, radius, max_retries=MAX_RETRIES):
+    retries = 0
+    while retries < max_retries:
+        try:
+            result = custom_simbad.query_region(SkyCoord(ra=ra_deg*u.deg, dec=dec_deg*u.deg), radius=radius)
+            if result is None:
+                return []
+            # Case-insensitive matching on OTYPE
+            return [
+                SkyCoord(ra=r['RA'], dec=r['DEC'], unit=(u.hourangle, u.deg))
+                for r in result if str(r['OTYPE']).upper() in BH_TYPES
+            ]
+        except Exception as e:
+            retries += 1
+            print(f"SIMBAD query failed at RA={ra_deg}, DEC={dec_deg} (attempt {retries}): {e}")
+            time.sleep(5)
+    print(f"SIMBAD query failed at RA={ra_deg}, DEC={dec_deg} after {max_retries} retries, skipping.")
+    return []
 
-# Angular separation clustering helper
 def compute_pairwise_separations(coords):
     if len(coords) < 2:
         return np.array([])
@@ -71,7 +80,7 @@ for i, row in tqdm(lenses.iterrows(), total=len(lenses)):
         all_lens_coords.extend(lens_coords)
         lens_seps.extend(compute_pairwise_separations(lens_coords))
 
-    # Generate random RA/DEC not near lens
+    # Generate random RA/DEC not near lens (minimum 1 deg separation)
     while True:
         ra_r, dec_r = random.uniform(0, 360), random.uniform(-90, 90)
         if np.all(np.sqrt((ra - ra_r)**2 + (dec - dec_r)**2) > 1):
