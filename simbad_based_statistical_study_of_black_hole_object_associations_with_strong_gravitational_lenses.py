@@ -1,5 +1,30 @@
-# Install packages if running in notebook (comment out if running in a script environment)
-# !pip install lenscat astropy astroquery scipy
+"""
+Large-scale SIMBAD-based statistical analysis of black hole (BH) object associations
+with strong gravitational lenses using ~13,000 confident lenses.
+
+This script:
+- Loads the full lens catalog from the 'lenscat' package.
+- Filters confident strong lenses with valid redshift.
+- Processes lenses in batches of 50 to manage SIMBAD query loads.
+- For each batch and radius (10', 15', 20'), queries SIMBAD for BH-type objects
+  near each lens and matching random sky positions avoiding any lenses.
+- Performs statistical tests (Chi-squared, Poisson) comparing BH counts around lenses
+  versus random sky points.
+- Outputs batch-wise and overall statistical summaries.
+
+Dependencies:
+- lenscat
+- astroquery
+- astropy
+- numpy
+- pandas
+- scipy
+
+Run this script to reproduce macro-scale statistical results on BH clustering near lenses.
+"""
+
+# Install packages if running in notebook (comment out if running as script)
+# !pip install lenscat astropy astroquery scipy pandas numpy
 
 import random
 import time
