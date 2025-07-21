@@ -133,7 +133,7 @@ Parts of the code development and documentation for this project were supported 
 
 - **Description:** Performs a large-scale SIMBAD-based statistical analysis of black hole (BH) object associations with ~14,000 strong gravitational lenses.
 - **Location:** [`simbad_based_statistical_study_of_black_hole_object_associations_with_strong_gravitational_lenses.py`](./simbad_based_statistical_study_of_black_hole_object_associations_with_strong_gravitational_lenses.py)
-- **Functionality:** Loads the lens catalog from `lenscat`, filters for confident lenses with valid redshift, queries SIMBAD for BH-like objects (BH, QSO, AGN, etc.) near each lens and random sky controls. Performs batch statistical comparisons (Poisson, Chi-squared, binomial) at radii of 10′, 15′, and 20′.
+- **Functionality:** Loads the lens catalog from `lenscat`, filters for confident lenses with valid redshift, queries SIMBAD for BH-like objects (BH, QSO, AGN, etc.) near each lens and matched random sky controls. Performs batch statistical comparisons (Poisson, Chi-squared, binomial) at radii of 10′, 15′, and 20′.
 - **Dependencies:** `lenscat`, `astroquery`, `astropy`, `numpy`, `pandas`, `scipy`, `tqdm`.
 - **Usage:** Run this script to reproduce the macro-scale statistical results on BH clustering near lenses.
 
@@ -151,10 +151,10 @@ Parts of the code development and documentation for this project were supported 
 
 ### `ripley_k_bh_lens_analysis_py.py`
 
-- **Description:** Performs Ripley’s K function–style spatial clustering analysis of black hole (BH)-type objects around a medium sample (n=1000) strong gravitational lenses versus matched random sky fields, quantifying angular clustering differences.  
-- **Location:** [`ripley_k_bh_lens_analysis_py.py`](./ripley_k_bh_lens_analysis_py.py)  
-- **Functionality:** Loads BH object coordinate data for lenses and random fields, computes pairwise angular separations, plots histograms of separations, and applies a Kolmogorov-Smirnov (KS) test to assess clustering significance.  
-- **Dependencies:** `numpy`, `pandas`, `astropy`, `matplotlib`, `scipy`.  
+- **Description:** Performs Ripley’s K function–style spatial clustering analysis of black hole (BH)-type objects around a medium sample (n=1000) of strong gravitational lenses versus matched random sky fields, quantifying angular clustering differences.
+- **Location:** [`ripley_k_bh_lens_analysis_py.py`](./ripley_k_bh_lens_analysis_py.py)
+- **Functionality:** Loads BH object coordinate data for lenses and random fields, computes pairwise angular separations, plots histograms of separations, and applies a Kolmogorov-Smirnov (KS) test to assess clustering significance.
+- **Dependencies:** `numpy`, `pandas`, `astropy`, `matplotlib`, `scipy`.
 - **Usage:** Run this script after obtaining SIMBAD query data to analyze and visualize spatial clustering signatures using Ripley’s K–style statistics.
 
 ---
