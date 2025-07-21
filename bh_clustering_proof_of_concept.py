@@ -1,75 +1,125 @@
+"""
+Proof-of-concept spatial clustering analysis of BH-type objects near a small sample (n=100) of strong gravitational lenses.
 
-import pandas as pd
-import numpy as np
+This script:
+- Loads a small subset of lenses from 'lenscat'.
+- Queries SIMBAD for BH-type objects near each lens and matched random points.
+- Computes angular separations between BH objects and lenses.
+- Produces histograms and cumulative distribution functions (CDF) to compare clustering.
+
+Dependencies: lenscat, astroquery, astropy, numpy, pandas, matplotlib, scipy
+
+Run this script for quick exploratory spatial clustering analysis and visualization.
+"""
+
 import random
-from astroquery.simbad import Simbad
+import time
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 from astropy.coordinates import SkyCoord
 import astropy.units as u
-from lenscat import lenscat
-from tqdm import tqdm
-import os
+from astroquery.simbad import Simbad
+from lenscat import catalog
 
-from google.colab import drive
-drive.mount('/content/drive')
+# Load small lens subset (~100)
+print("Loading full catalog from lenscat package...")
+df = catalog.to_pandas()
+df_strong = df[df['grading'].isin(['confident', 'probable'])].copy()
+df_strong['z'] = pd.to_numeric(df_strong['zlens'], errors='coerce')
+df_strong = df_strong.dropna(subset=['z']).reset_index(drop=True)
 
-# Prepare output directory
-output_dir = "/content/drive/MyDrive/bh_clustering_batches/"
-os.makedirs(output_dir, exist_ok=True)
+lens_sample = df_strong.sample(n=100, random_state=42).reset_index(drop=True)
+print(f"Sampled {len(lens_sample)} lenses for proof-of-concept.")
 
-# Configure SIMBAD
+# Prepare SIMBAD query setup
 custom_simbad = Simbad()
-custom_simbad.TIMEOUT = 120
-custom_simbad.add_votable_fields("otype", "ra", "dec")
+custom_simbad.TIMEOUT = 60
+custom_simbad.remove_votable_fields('*')
+custom_simbad.add_votable_fields('otype')
 
-# Define BH-like types
-bh_types = {"BH", "BH?","BLLac", "QSO", "AGN", "XRB", "LMXB", "HMXB", "BHXRB"}
+bh_types = ['BH', 'BHXRB', 'XRB', 'BLAZAR', 'AGN', 'QSO']
 
-# Load lens catalog and filter
-df = lenscat.load()
-lens_df = df[(df["grade"].isin(["A", "B"])) & (df["z"].notna())].reset_index(drop=True)
-lens_df_sample = lens_df.sample(n=100, random_state=42).reset_index(drop=True)
-
-# Store all results
-results = []
-
-# Main loop
-for idx, row in tqdm(lens_df_sample.iterrows(), total=len(lens_df_sample)):
-    lens_ra, lens_dec = row["ra"], row["dec"]
-    lens_coord = SkyCoord(ra=lens_ra * u.deg, dec=lens_dec * u.deg, frame="icrs")
-
-    # Random point avoiding known lenses
-    while True:
-        rand_ra, rand_dec = random.uniform(0, 360), random.uniform(-90, 90)
-        sep = SkyCoord(rand_ra * u.deg, rand_dec * u.deg).separation(lens_df["ra"].values * u.deg, lens_df["dec"].values * u.deg)
-        if np.all(sep > 0.3 * u.deg):  # ~18 arcmin
-            break
-    rand_coord = SkyCoord(ra=rand_ra * u.deg, dec=rand_dec * u.deg)
-
-    # Query around real lens
+def query_bh_objects(coord, radius_arcmin=20):
+    radius = radius_arcmin * u.arcmin
     try:
-        lens_query = custom_simbad.query_region(lens_coord, radius=15 * u.arcmin)
-        lens_bh_count = sum(otype.decode("utf-8") in bh_types for otype in lens_query["OTYPE"]) if lens_query else 0
+        result = custom_simbad.query_region(coord, radius=radius)
+        if result is None:
+            return []
+        # Filter BH-type objects
+        bh_objects = [row for row in result if any(bh in row['OTYPE'] for bh in bh_types)]
+        return bh_objects
     except Exception as e:
-        lens_bh_count = -1
+        print(f"SIMBAD query failed at {coord.to_string('hmsdms')}: {e}")
+        return []
 
-    # Query around random point
-    try:
-        rand_query = custom_simbad.query_region(rand_coord, radius=15 * u.arcmin)
-        rand_bh_count = sum(otype.decode("utf-8") in bh_types for otype in rand_query["OTYPE"]) if rand_query else 0
-    except Exception as e:
-        rand_bh_count = -1
+# Generate random sky points avoiding lenses (approximate)
+def generate_random_points(n_points, min_sep_arcmin=20):
+    points = []
+    attempts = 0
+    max_attempts = n_points * 100
+    all_coords = SkyCoord(ra=lens_sample['RA'].values * u.deg,
+                          dec=lens_sample['DEC'].values * u.deg)
+    while len(points) < n_points and attempts < max_attempts:
+        ra_rand = random.uniform(0, 360)
+        dec_rand = random.uniform(-90, 90)
+        coord = SkyCoord(ra=ra_rand * u.deg, dec=dec_rand * u.deg)
+        sep = coord.separation(all_coords).arcminute
+        if np.all(sep > min_sep_arcmin):
+            points.append(coord)
+        attempts += 1
+    if len(points) < n_points:
+        print(f"⚠️ Only generated {len(points)} random points after {attempts} attempts")
+    return points
 
-    results.append({
-        "Lens RA": lens_ra,
-        "Lens DEC": lens_dec,
-        "BH Count (Lens)": lens_bh_count,
-        "BH Count (Random)": rand_bh_count,
-        "Random RA": rand_ra,
-        "Random DEC": rand_dec,
-    })
+# Query BH objects for lenses and random fields
+lens_bh_objects = []
+random_bh_objects = []
+lens_coords = SkyCoord(ra=lens_sample['RA'].values * u.deg,
+                       dec=lens_sample['DEC'].values * u.deg)
+random_coords = generate_random_points(len(lens_sample), min_sep_arcmin=20)
 
-# Save results
-results_df = pd.DataFrame(results)
-results_df.to_csv(os.path.join(output_dir, "bh_counts_100_lenses.csv"), index=False)
+print("Querying SIMBAD for BH-type objects around lenses...")
+for coord in lens_coords:
+    objs = query_bh_objects(coord, radius_arcmin=20)
+    lens_bh_objects.append(objs)
+    time.sleep(1)  # throttle
 
-print("✅ Done. Results saved.")
+print("Querying SIMBAD for BH-type objects around random points...")
+for coord in random_coords:
+    objs = query_bh_objects(coord, radius_arcmin=20)
+    random_bh_objects.append(objs)
+    time.sleep(1)  # throttle
+
+# Flatten BH counts per field
+lens_counts = [len(objs) for objs in lens_bh_objects]
+random_counts = [len(objs) for objs in random_bh_objects]
+
+# Histogram and CDF plots
+plt.figure(figsize=(10, 6))
+bins = np.arange(0, max(max(lens_counts), max(random_counts)) + 2) - 0.5
+plt.hist(lens_counts, bins=bins, alpha=0.6, label='Lens Fields')
+plt.hist(random_counts, bins=bins, alpha=0.6, label='Random Fields')
+plt.xlabel('BH-type Object Count')
+plt.ylabel('Number of Fields')
+plt.title('Histogram of BH-type Objects Near Lenses vs Random Fields')
+plt.legend()
+plt.show()
+
+# CDF plot
+def cdf(data):
+    sorted_data = np.sort(data)
+    yvals = np.arange(1, len(sorted_data)+1) / float(len(sorted_data))
+    return sorted_data, yvals
+
+lens_x, lens_y = cdf(lens_counts)
+random_x, random_y = cdf(random_counts)
+
+plt.figure(figsize=(10, 6))
+plt.step(lens_x, lens_y, label='Lens Fields', where='post')
+plt.step(random_x, random_y, label='Random Fields', where='post')
+plt.xlabel('BH-type Object Count')
+plt.ylabel('CDF')
+plt.title('Cumulative Distribution Function of BH-type Object Counts')
+plt.legend()
+plt.show()
