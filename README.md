@@ -127,6 +127,33 @@ Parts of the code development and documentation for this project were supported 
 
 ---
 
+## Code
+
+### `bh_lens_simbad_analysis.py`
+
+- **Description:** Performs the SIMBAD-based statistical analysis of black hole (BH) object associations with strong gravitational lenses.  
+- **Location:** [`bh_lens_simbad_analysis.py`](./bh_lens_simbad_analysis.py)  
+- **Functionality:** Loads the lens catalog from `lenscat`, filters lenses with valid redshift, queries SIMBAD for BH-type objects near lenses and matched random sky points, and performs batch statistical tests (Chi-squared, Poisson, etc.) at multiple angular radii.  
+- **Dependencies:** Requires `lenscat`, `astroquery`, `astropy`, `numpy`, `pandas`, `scipy`.  
+- **Usage:** Run this script to reproduce the main statistical results of BH clustering around lenses.
+
+---
+
+### `spatial_clustering_proof_of_concept.py`
+
+- **Description:** Proof-of-concept spatial clustering analysis of black hole-type objects near strong gravitational lenses versus random sky fields.  
+- **Location:** [`spatial_clustering_proof_of_concept.py`](./spatial_clustering_proof_of_concept.py)  
+- **Functionality:** Loads a subset (~100) of lenses from the `lenscat` catalog, queries SIMBAD for BH-like objects within a fixed radius, computes angular separations, and compares clustering statistics against matched random points avoiding lens overlap.  
+- **Dependencies:** Requires `lenscat`, `astroquery`, `astropy`, `numpy`, `pandas`, `matplotlib`, `scipy`.  
+- **Usage:** Run this script to visualize and statistically test BH spatial clustering on a smaller lens sample for rapid prototyping.
+
+---
+
+*Make sure to install the necessary packages before running these scripts:*
+
+```bash
+pip install lenscat astroquery astropy scipy pandas numpy matplotlib tqdm
+
 ## How to Run
 
 1. Clone this repository.
